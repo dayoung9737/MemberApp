@@ -8,21 +8,34 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.hanbit.memberapp.R;
+import com.hanbit.memberapp.domain.MemberBean;
+import com.hanbit.memberapp.service.MemberService;
+import com.hanbit.memberapp.service.MemeberServiceImpl;
 
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
     TextView tvID, tvPass, tvName, tvTel, tvAddr ;
     Button btCall,btMap, btMessage, btUpdate, btDelete, btList;
+    MemberService service;
+    MemberBean member;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        service = new MemeberServiceImpl(getApplicationContext());
+        member = service.detail("hong");
 
         tvID = (TextView) findViewById(R.id.tvID);
         tvPass = (TextView) findViewById(R.id.tvPass);
         tvName = (TextView) findViewById(R.id.tvName);
         tvTel = (TextView) findViewById(R.id.tvTel);
         tvAddr = (TextView) findViewById(R.id.tvAddr);
+        tvID.setText(member.getId());
+        tvPass.setText(member.getPass());
+        tvName.setText(member.getName());
+        tvTel.setText(member.getTel());
+        tvAddr.setText(member.getAddr());
+
         btCall = (Button) findViewById(R.id.btCall);
         btMap = (Button) findViewById(R.id.btMap);
         btMessage = (Button) findViewById(R.id.btMessage);
@@ -46,10 +59,14 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.btCall:break;
             case R.id.btMap: break;
             case R.id.btMessage: break;
+
             case R.id.btUpdate:
                 this.startActivity(new Intent(DetailActivity.this, UpdateActivity.class ));
                 break;
-            case R.id.btDelete: break;
+            case R.id.btDelete:
+                service.delete(tvID.getText().toString());
+                this.startActivity(new Intent(DetailActivity.this, ListActivity.class ));
+                break;
             case R.id.btList:
                 this.startActivity(new Intent(DetailActivity.this, ListActivity.class ));
                 break;
